@@ -1,0 +1,26 @@
+@media (max-width: 767px) {
+  /* On small screens, the nav menu spans the full width of the screen. Leave a space for it. */
+  .body-content {
+    padding-top: 50px;
+  }
+}
+
+#input-container {
+  display: flex;
+  position: fixed;
+  top: 60rem;
+  left: 20.5rem;
+  width: 100%;
+}
+
+.input-field {
+  width: 90%;
+}
+
+.input-button {
+
+}
+
+#messages-container {
+  margin-left: 20.5rem;
+}
