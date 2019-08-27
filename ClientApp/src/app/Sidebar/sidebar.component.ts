@@ -1,5 +1,4 @@
-import { Component, OnInit } from "@angular/core";
-import { AppComponent } from '../app.component'
+import { Component } from "@angular/core";
 
 @Component({
     selector: 'sidebar',
@@ -8,8 +7,17 @@ import { AppComponent } from '../app.component'
 })
 export class SidebarComponent {
     channels: string[] = ['Public', 'Other', 'Self']
+    currChannel: string = 'Public'
 
-    changeChannel() {
-        console.log(this.channels)
+    switchChannel(channel) {
+        if(channel === 'Public') {
+            this.currChannel = this.channels[0]
+        }
+        else if(channel === 'Other') {
+            this.currChannel = this.channels[1]
+        }
+        else if(channel === 'Self') {
+            this.currChannel = this.channels[2]
+        }
     }
 }

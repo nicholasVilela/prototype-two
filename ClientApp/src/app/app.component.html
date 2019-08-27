@@ -1,9 +1,12 @@
 <div class='container-fluid'>
-  <form (ngSubmit)="sendMessage()" id="input-container">
-    <input name="input-field" class="input-field" type="text" placeholder="Enter a message..." [(ngModel)]="message"/>
-  </form>
-
   <div id="messages-container" *ngFor="let message of messages">
     <span>{{ message }}</span>
   </div>
+  
+  <input type="button" (click)="joinGroup('Public')" value="Join Public group"/>
+  <sidebar></sidebar>
+
+  <form (ngSubmit)="sendMessage()" id="input-container">
+    <input name="input-field" class="input-field" type="text" placeholder="Enter a message..." [(ngModel)]="message" />
+  </form>
 </div>

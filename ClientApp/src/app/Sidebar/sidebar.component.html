@@ -1,15 +1,7 @@
 <div id="sidebar" class="container-fluid">
-    <select id="group" [(ngModel)]="groups" >
-      <option value="All">Everyone</option>
-      <option value="Self">Myself</option>
-      <option value="PrivateGroup">Private Group</option>
-    </select>
-    
     <ul id="channels" *ngFor="let channel of channels">
       <li id="channel-list">
-        <input (click)="changeChannel()" type="button" value="{{ channel }}"/>
+        <input [(ngModel)]="aChannel" (click)="switchChannel('Public')" type="button" value="{{ channel }}"/>
       </li>
     </ul>
-
-    <input type="button" value="Join Private Group" (click)="joinGroup()">
 </div>

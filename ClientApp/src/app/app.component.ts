@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import * as signalR from '@aspnet/signalr'
+import { SidebarComponent } from '../app/Sidebar/sidebar.component'
 
 @Component({
   selector: 'app-root',
@@ -10,41 +11,57 @@ export class AppComponent implements OnInit{
   title = 'app';
   user = ''
   message = ''
-  messages: string[] = []
+  publicMessages: string[] = []
+  otherMessages: string[] = []
+  selfMessages: string[] = []
   groups = document.querySelector('#group')
   connection = new signalR.HubConnectionBuilder()
     .withUrl('/chathub')
     .build()
+  @ViewChild(SidebarComponent) Sidebar
 
   sendMessage() {
-    const groups = document.querySelector('#group')
-    const groupValue = groups.options[groups.selectedIndex].value
+    if (this.Sidebar.currChannel === 'Public') {
+      this.connection
+        .invoke("SendGroupMessage", 'Public', this.user, this.message)
+        .then(() => this.message = '')
+        .catch(err => console.log(err))
 
-    if (groupValue === 'PrivateGroup') {
+      this.receiveMessage(this.publicMessages)
+    }
+    else if (this.Sidebar.currChannel === 'Other') {
+      console.log(this.Sidebar.currChannel)
       this.connection
-        .invoke("SendGroupMessage", 'PrivateGroup', this.user, this.message)
+        .invoke("SendGroupMessage", 'Other', this.user, this.message)
         .then(() => this.message = '')
         .catch(err => console.log(err))
+
+      this.receiveMessage(this.otherMessages)
     }
-    else if (groupValue === 'All') {
-      this.connection
-        .invoke("SendMessage", this.user, this.message)
-        .then(() => this.message = '')
-        .catch(err => console.log(err))
-    }
-    else if (groupValue === 'Self') {
+    else if (this.Sidebar.currChannel === 'Self') {
+      console.log(this.Sidebar.currChannel)
       this.connection
         .invoke("SendSelfMessage", this.user, this.message)
         .then(() => this.message = '')
         .catch(err => console.log(err))
+
+      this.receiveMessage(this.selfMessages)
     }
   }
 
-  joinGroup() {
+  joinGroup(groupName) {
     this.connection
-      .invoke("JoinGroup", 'PrivateGroup')
-      .then(() => console.log('Joined Private Group'))
+      .invoke("JoinGroup", groupName)
+      .then(() => console.log(`Joined ${groupName}!`))
       .catch(err => console.log(err))
+  }
+
+  receiveMessage(channelMessages) {
+    this.connection
+      .on("ReceiveMessage", (user: string, message: string) => {
+        const text = `${user}: ${message}`
+        channelMessages.push(text)
+      })
   }
 
   setup() {
@@ -52,13 +69,6 @@ export class AppComponent implements OnInit{
       .start()
       .then(() => console.log('Connection successful!'))
       .catch(err => console.log(err))
-
-    this.connection
-      .on("ReceiveMessage", (user: string, message: string) => {
-        const text = `${user}: ${message}`
-        this.messages.push(text)
-        console.log(this.messages)
-      })
   }
 
   ngOnInit() {
