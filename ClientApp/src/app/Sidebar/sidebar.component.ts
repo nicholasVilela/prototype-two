@@ -1,23 +1,26 @@
-import { Component } from "@angular/core";
+import { Component, OnInit, Input } from '@angular/core'
+import * as signalR from '@aspnet/signalr'
 
 @Component({
     selector: 'sidebar',
     templateUrl: './sidebar.component.html',
     styleUrls: ['./sidebar.component.css']
 })
+
 export class SidebarComponent {
     channels: string[] = ['Public', 'Other', 'Self']
-    currChannel: string = 'Public'
+    currChannel: string
+    
 
-    switchChannel(channel) {
-        if(channel === 'Public') {
-            this.currChannel = this.channels[0]
+    changeChannel(channel) {
+        if (channel === 'Public') {
+            this.currChannel = channel
         }
-        else if(channel === 'Other') {
-            this.currChannel = this.channels[1]
+        else if (channel === 'Other') {
+            this.currChannel = channel
         }
-        else if(channel === 'Self') {
-            this.currChannel = this.channels[2]
+        else if (channel === 'Self') {
+            this.currChannel = channel
         }
     }
 }

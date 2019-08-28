@@ -5,10 +5,12 @@ import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
+import { MainComponent } from './Main/main.component'
 import { SidebarComponent } from './Sidebar/sidebar.component'
 @NgModule({
   declarations: [
     AppComponent,
+    MainComponent,
     SidebarComponent
   ],
   imports: [
@@ -17,10 +19,11 @@ import { SidebarComponent } from './Sidebar/sidebar.component'
     FormsModule,
     RouterModule.forRoot([
       { path: '', component: AppComponent, pathMatch: 'full' },
+      { path: '', component: MainComponent, pathMatch: 'full' },
       { path: '', component: SidebarComponent, pathMatch: 'full' }
     ])
   ],
   providers: [],
-  bootstrap: [AppComponent, SidebarComponent]
+  bootstrap: [AppComponent, MainComponent, SidebarComponent]
 })
 export class AppModule { }

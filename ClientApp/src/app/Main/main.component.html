@@ -1,0 +1,13 @@
+<div class="container-fluid">
+    <form (ngSubmit)="sendMessage()">
+        <input name="input-field" class="input-field" type="text" placeholder="Enter a message..." [(ngModel)]="message" />
+    </form>
+</div>
+
+<input type="button" value="click" (click)="joinChannel()"/>
+
+<ul id="messages-container" class="container-fluid">
+    <li *ngFor="let message of messages">
+        {{ message }}
+    </li>
+</ul>

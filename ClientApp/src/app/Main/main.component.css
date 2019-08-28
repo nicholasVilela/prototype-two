@@ -1,0 +1,7 @@
+.input-field {
+    display: flex;
+    position: fixed;
+    top: 60rem;
+    left: 20.5rem;
+    width: 100%;
+}

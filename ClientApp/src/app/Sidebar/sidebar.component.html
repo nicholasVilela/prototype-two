@@ -1,7 +1,5 @@
-<div id="sidebar" class="container-fluid">
-    <ul id="channels" *ngFor="let channel of channels">
-      <li id="channel-list">
-        <input [(ngModel)]="aChannel" (click)="switchChannel('Public')" type="button" value="{{ channel }}"/>
-      </li>
-    </ul>
-</div>
+<ul id="sidebar" class="container-fluid">
+    <li *ngFor="let channel of channels">
+        <input type="button" (click)="changeChannel(channel)" value="{{ channel }}" />
+    </li>
+</ul>
