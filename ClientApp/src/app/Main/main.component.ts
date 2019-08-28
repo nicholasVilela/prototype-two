@@ -11,15 +11,14 @@ export class MainComponent implements OnInit {
     user: string = 'Nicholas'
     message: string = ''
     messages: string[] = []
-    // @Input() channel: string
-    channel = 'Public'
+    @Input('channel') channelName: string
     connection = new signalR.HubConnectionBuilder()
         .withUrl('/chathub')
         .build()    
 
     sendMessage() {
         this.connection
-            .invoke("SendChannelMessage", 'Public', this.user, this.message)
+            .invoke("SendChannelMessage", this.channelName, this.user, this.message)
             .then(() => console.log(this.message))
             .then(() => this.message = '')
             .catch(err => console.log(err))
@@ -27,7 +26,11 @@ export class MainComponent implements OnInit {
     
     joinChannel() {
         this.connection
-            .invoke("JoinChannel", 'Public')
+            .invoke("JoinChannel", this.channelName)
+    }
+
+    sendData(thing) {
+        console.log('ahh')
     }
 
     setup() {
@@ -42,10 +45,11 @@ export class MainComponent implements OnInit {
                 this.messages.push(text)
             })
 
+        // console.log(this.channel)
+
         // this.user = window.prompt('Enter your name', 'Nicholas')
     }
 
     ngOnInit() {
-        this.setup()
     }
 }

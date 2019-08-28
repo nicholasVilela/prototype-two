@@ -1,5 +1,5 @@
 <ul id="sidebar" class="container-fluid">
     <li *ngFor="let channel of channels">
-        <input type="button" (click)="changeChannel(channel)" value="{{ channel }}" />
+        <button (click)="changeChannel(channel)">{{channel}}</button>
     </li>
 </ul>

@@ -4,9 +4,8 @@
     </form>
 </div>
 
-<input type="button" value="click" (click)="joinChannel()"/>
-
 <ul id="messages-container" class="container-fluid">
+    <input class="test" type="button" value="click" (click)="joinChannel()" />
     <li *ngFor="let message of messages">
         {{ message }}
     </li>
