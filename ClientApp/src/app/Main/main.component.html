@@ -1,12 +1,35 @@
+<div id="message-box">
+    <ul *ngIf="showPublic" id="messages-container" class="container-fluid">
+        <li class="no-text-decoration" *ngFor="let message of messages">
+            {{ message }}
+        </li>
+    </ul>
+</div>
+
+<div id="message-box">
+    <ul *ngIf="showOther" id="messages-container" class="container-fluid">
+        <li class="no-text-decoration" *ngFor="let message of messages">
+            {{ message }}
+        </li>
+    </ul>
+</div>
+
+<div id="message-box">
+    <ul *ngIf="showSelf" id="messages-container" class="container-fluid">
+        <li class="no-text-decoration" *ngFor="let message of messages">
+            {{ message }}
+        </li>
+    </ul>
+</div>
+
 <div class="container-fluid">
     <form (ngSubmit)="sendMessage()">
-        <input name="input-field" class="input-field" type="text" placeholder="Enter a message..." [(ngModel)]="message" />
+        <input autocomplete="off" name="input-field" class="input-field form-control" type="text" placeholder="Enter a message..." [(ngModel)]="message" />
     </form>
 </div>
 
-<ul id="messages-container" class="container-fluid">
-    <input class="test" type="button" value="click" (click)="joinChannel()" />
-    <li *ngFor="let message of messages">
-        {{ message }}
+<ul id="sidebar" class="container-fluid">
+    <li class="button-class" *ngFor="let channel of channels">
+        <button class="btn btn-danger" (click)="changeChannel(channel)">{{ channel }}</button>
     </li>
 </ul>

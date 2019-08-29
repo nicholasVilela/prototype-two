@@ -1,19 +1,38 @@
 .input-field {
     display: flex;
-    position: fixed;
-    top: 60rem;
-    left: 20.5rem;
-    width: 100%;
-}
-
-.test {
-    display: flex;
-    position: fixed;
-    left: 20rem;
-}
-
-#messages-container {
-    display: block;
     position: absolute;
-    left: 20rem;
+    bottom: 0;
+    right: 0;
+    width: 85%;
+}
+
+#message-box {
+    display: flex;
+    width: 100%;
+    position: absolute;
+    bottom: 2.5rem;
+}
+
+.no-text-decoration {
+    list-style-type: none;
+}
+
+#sidebar {
+    display: block;
+    position: fixed;
+    height: 100%;
+    width: 15%;
+    background-color: darkslateblue;
+    left: 0;
+}
+
+.hidden {
+    display: none
+}
+
+.button-class {
+    display: flex;
+    list-style-type: none;
+    margin-top: 2rem;
+    justify-content: center;
 }

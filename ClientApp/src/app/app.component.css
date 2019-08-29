@@ -4,23 +4,3 @@
     padding-top: 50px;
   }
 }
-
-#input-container {
-  display: flex;
-  position: fixed;
-  top: 60rem;
-  left: 20.5rem;
-  width: 100%;
-}
-
-.input-field {
-  width: 90%;
-}
-
-.input-button {
-
-}
-
-#messages-container {
-  margin-left: 20.5rem;
-}
