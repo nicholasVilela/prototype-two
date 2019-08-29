@@ -1,6 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core'
+import { Component, OnInit } from '@angular/core'
 import * as firebase from 'firebase'
 import * as signalR from '@aspnet/signalr'
+import { read } from 'fs';
 
 @Component({
     selector: 'main',
@@ -12,10 +13,6 @@ export class MainComponent implements OnInit{
     user: string = 'User'
     message: string = ''
     messages = []
-    publicMessages: string[] = []
-    otherMessages: string[] = []
-    selfMessages: string[] = []
-    activeMessages = []
     currChannel: string = ''
     channels: string[] = ['Public', 'Other', 'Self']
     joinedChannels = []
@@ -26,12 +23,6 @@ export class MainComponent implements OnInit{
     connection = new signalR.HubConnectionBuilder()
         .withUrl('/chathub')
         .build()
-        
-    startConnection = this.connection
-        .start()
-        .then(() => console.log('Connection Successful'))
-        .then(() => this.user = window.prompt('What is your name?', 'Nicholas'))
-        .catch(err => console.log(err))
 
     firebaseConfig = {
         apiKey: "AIzaSyDQBb0Jb6pbblJbukn8Dg-TGYVCdYMl1GQ",
@@ -50,53 +41,59 @@ export class MainComponent implements OnInit{
         if (this.currChannel != 'Self') {
             this.connection
                 .invoke("SendChannelMessage", this.currChannel, this.user, this.message)
-                .then(() => this.addMessageToDB(this.currChannel, this.user, this.message))
-                // .then(() => console.log(this.database))
-                // .then(() => console.log(this.message))
                 .then(() => this.message = '')
                 .catch(err => console.log(err)) 
+            this.addMessageToDB(this.currChannel, this.user, this.message)
         }
         else { 
             this.connection
                 .invoke("SendSelfMessage", this.user, this.message)
-                .then(() => this.addMessageToDB(this.currChannel, this.user, this.message))
-                // .then(() => console.log(this.message))
                 .then(() => this.message = '')
                 .catch(err => console.log(err))
+
+            this.addMessageToDB(this.currChannel, this.user, this.message)
         }
     }
 
     addMessageToDB(channel: string, user: string, message: string) {
+        console.log('ADDED')
         const messageData = {
             username: user,
             channel: channel,
-            messages: message
+            message: message
         }
 
-        const messageKey = this.database.ref().child('channel').push().key
+        console.log(channel)
+        console.log(user)
+        console.log(message)
+
+        const messageKey = this.database.ref().child(channel).push().key
 
         const updates = {}
-        updates[`${channel}/${user}/${messageKey}`] = messageData
+        updates[`${channel}/messages/${messageKey}`] = messageData
         
-        return this.database.ref().update(updates)
+        this.database.ref().update(updates)
     }
 
     readMessagesFromDB(channel) {
-        const channelMessages = this.database.ref(`${channel}/`)
         this.messages = []
-        channelMessages.on('value', snapshot => {
-            snapshot.forEach(user => {
-                user.forEach(message => {
-                    const text = message.val().username + ': ' + message.val().messages 
-                    this.messages.push(text)
+        const channelMessages = this.database
+            .ref(`${channel}`)
+            .once('value')
+            .then(snapshot => {
+                snapshot.forEach(messageList => {
+                    messageList.forEach(message => {
+                        const text = message.val().username + ': ' + message.val().message
+                        this.messages.push(text)
+                    })
                 })
             })
-        })
+        return channelMessages
     }
     
     joinChannel(channel) {
         this.connection
-            .invoke("JoinChannel", channel)
+            .invoke("JoinChannel", channel, this.user, `${this.user} has joined the channel ${channel}`)
 
         this.joinedChannels.push(channel)
     }
@@ -104,8 +101,6 @@ export class MainComponent implements OnInit{
     changeChannel(channel) {
         if (channel === 'Public') {
             this.currChannel = channel
-            // this.messages = []
-            // this.messages.push(this.publicMessages)
             this.showPublic = true
             this.showOther = false
             this.showSelf = false
@@ -113,8 +108,6 @@ export class MainComponent implements OnInit{
         }
         else if (channel === 'Other') {
             this.currChannel = channel
-            // this.messages = []
-            // this.messages.push(this.otherMessages)
             this.showPublic = false
             this.showOther = true
             this.showSelf = false
@@ -122,8 +115,6 @@ export class MainComponent implements OnInit{
         }
         else if (channel === 'Self') {
             this.currChannel = channel
-            // this.messages = []
-            // this.messages.push(this.selfMessages)
             this.showPublic = false
             this.showOther = false
             this.showSelf = true
@@ -135,14 +126,22 @@ export class MainComponent implements OnInit{
         }
     }
 
-    // setup() {
-        
-    // }
+    setup() {
+        this.connection
+            .start()
+            .then(() => console.log('Connection Successful'))
+            .then(() => this.user = window.prompt('What is your name?', 'Nicholas'))
+            .catch(err => console.log(err))
 
-    ngOnInit() {
         this.connection
             .on("ReceiveMessage", (user: string, message: string) => {
-                this.readMessagesFromDB(this.currChannel)
-            })
+                // this.addMessageToDB(this.currChannel, user, message)
+                const text = `${user}: ${message}`
+                this.messages.push(text)
+            }) 
+    }
+
+    ngOnInit() {
+        this.setup()
     }
 }
