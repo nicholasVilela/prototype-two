@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core'
 import * as firebase from 'firebase'
 import * as signalR from '@aspnet/signalr'
-import { read } from 'fs';
 
 @Component({
     selector: 'main',
@@ -135,7 +134,6 @@ export class MainComponent implements OnInit{
 
         this.connection
             .on("ReceiveMessage", (user: string, message: string) => {
-                // this.addMessageToDB(this.currChannel, user, message)
                 const text = `${user}: ${message}`
                 this.messages.push(text)
             }) 

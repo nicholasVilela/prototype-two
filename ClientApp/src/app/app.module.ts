@@ -5,22 +5,22 @@ import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 
 import { MainComponent } from './Main/main.component';
-// import { AppComponent } from './app.component'
+import { LoginComponent } from './LoginPage/login.component'
 @NgModule({
   declarations: [
     MainComponent,
-    // AppComponent
+    LoginComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
     FormsModule,
     RouterModule.forRoot([
-      // { path: '', component: AppComponent, pathMatch: 'full' },
-      { path: '', component: MainComponent, pathMatch: 'full' }
+      { path: '/chat', component: MainComponent, pathMatch: 'full' },
+      { path: '/', component: LoginComponent, pathMatch: 'full' }
     ])
   ],
   providers: [],
-  bootstrap: [MainComponent]
+  bootstrap: [MainComponent, LoginComponent]
 })
 export class AppModule { }
